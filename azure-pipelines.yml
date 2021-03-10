@@ -25,17 +25,17 @@ stages:
         displayName: 'Install Node.js'
 
       - script: |
-          cd '$(System.DefaultWorkingDirectory)/HelloAngular'
+          # cd '$(System.DefaultWorkingDirectory)/HelloAngular'
+          cd '$(System.DefaultWorkingDirectory)'
           npm install -g @angular/cli
           npm install
           ng build --prod
         displayName: 'npm install and build'
   
   - job: listingContent
+    dependsOn: BuildJob
     steps:
       - script: |
-          ls
-          ls dist/
           ls dist/HelloAngular/
   # - job: BuildArtifact
   #   steps:
