@@ -14,8 +14,6 @@ stages:
   displayName: Build stage
   jobs:
   - job: BuildJob
-    pool:
-      vmImage: 'ubuntu-20.04'
     steps:
       - task: NodeTool@0
         inputs:
@@ -43,6 +41,17 @@ stages:
           ArtifactName: 'drop'
           publishLocation: 'Container'
 
+- stage: PushOnDocker
+  displayName: Pushing on Docker
+  jobs:
+  - job: DockerPush
+    steps:
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'gurjeet-dhub'
+          repository: 'iamguri/angular-helloworld'
+          command: 'buildAndPush'
+          Dockerfile: '**/Dockerfile'
 
 # steps:
 # - task: NodeTool@0
