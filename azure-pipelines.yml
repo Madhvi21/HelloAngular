@@ -29,10 +29,14 @@ stages:
           npm install -g @angular/cli
           npm install
           ng build --prod
-          ls dist/
-          ls dist/HelloAngular
         displayName: 'npm install and build'
   
+  - job: listingContent
+    steps:
+      - script: |
+          ls
+          ls dist/
+          ls dist/HelloAngular/
   # - job: BuildArtifact
   #   steps:
   #     - task: ArchiveFiles@2
