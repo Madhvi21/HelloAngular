@@ -13,55 +13,61 @@ variables:
   # ImageName: 'iamguri/helloangular:$(Build.BuildId)'
   ImageName: 'iamguri/helloangular:helloangular'  
 
-
-# stages:
-# - stage: Build
-#   displayName: Build stage
-#   jobs:
-#   - job: BuildJob
-#     steps:
-#       - task: NodeTool@0
-#         inputs:
-#           versionSpec: '10.x'
-#         displayName: 'Install Node.js'
-
-#       - script: |
-#           cd '$(System.DefaultWorkingDirectory)/HelloAngular'
-#           npm install -g @angular/cli
-#           npm install
-#           ng build --prod
-#         displayName: 'npm install and build'
-#       - task: ArchiveFiles@2
-#         displayName: 'Archive files'
-#         inputs:
-#           rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist/HelloAngular/'
-#           includeRootFolder: false
-#           archiveType: zip
-#           archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-#           replaceExistingArchive: true
-
-#       - task: PublishBuildArtifacts@1
-#         inputs:
-#           PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-#           ArtifactName: 'drop'
-#           publishLocation: 'Container'
-
 stages:
-
 - stage: Build
-  displayName: Build image
-  jobs:  
-  - job: DockerImage
-    displayName: Build and push Docker image
+  displayName: Build stage
+  jobs:
+  - job: BuildJob
     steps:
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'gurjeet-dhub'
-        repository: 'iamguri/helloangular'
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-    - script: |
-        docker images
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '10.x'
+        displayName: 'Install Node.js'
+
+      - script: |
+          cd '$(System.DefaultWorkingDirectory)/HelloAngular'
+          npm install -g @angular/cli
+          npm install
+          ng build --prod
+        displayName: 'npm install and build'
+  
+  - job: BuildArtifact
+    steps:
+      - task: ArchiveFiles@2
+        displayName: 'Archive files'
+        inputs:
+          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist/HelloAngular/'
+          includeRootFolder: false
+          archiveType: zip
+          archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+          replaceExistingArchive: true
+      - script: |
+          ls
+
+  - job: PublishArtifact
+    steps:
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
+      - script: |
+          ls
+
+# - stage: Build
+#   displayName: Build image
+#   jobs:  
+#   - job: DockerImage
+#     displayName: Build and push Docker image
+#     steps:
+#     - task: Docker@2
+#       inputs:
+#         containerRegistry: 'gurjeet-dhub'
+#         repository: 'iamguri/helloangular'
+#         command: 'buildAndPush'
+#         Dockerfile: '**/Dockerfile'
+#     - script: |
+#         docker images
 
 # - stage: PushingOnDockerHub
 #   displayName: Pushing on DockerHub
