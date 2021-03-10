@@ -25,8 +25,7 @@
 #COPY --from=build-step /app/docs /usr/share/nginx/html
 
 FROM nginx:alpine
-COPY ./dist/HelloAngular
-  /usr/share/nginx/html
+COPY ./dist/HelloAngular /usr/share/nginx/html
 EXPOSE 80 443
 ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
 
