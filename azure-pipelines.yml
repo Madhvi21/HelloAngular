@@ -63,6 +63,8 @@ stages:
         includeLatestTag: true
         useDefaultContext: false
         buildContext: '.'
+    - script: |
+        docker images
 
 - stage: PushingOnDockerHub
   displayName: Pushing on DockerHub
