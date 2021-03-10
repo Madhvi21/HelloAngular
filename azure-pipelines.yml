@@ -14,7 +14,7 @@ variables:
   ImageName: 'iamguri/helloangular:helloangular'  
 
 stages:
-- stage: Build
+- stage: BuildUsingNode
   displayName: Build stage
   jobs:
   - job: BuildJob
@@ -29,46 +29,48 @@ stages:
           npm install -g @angular/cli
           npm install
           ng build --prod
+          ls dist/
+          ls dist/HelloAngular
         displayName: 'npm install and build'
   
-  - job: BuildArtifact
-    steps:
-      - task: ArchiveFiles@2
-        displayName: 'Archive files'
-        inputs:
-          rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist/HelloAngular/'
-          includeRootFolder: false
-          archiveType: zip
-          archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-          replaceExistingArchive: true
-      - script: |
-          ls
+  # - job: BuildArtifact
+  #   steps:
+  #     - task: ArchiveFiles@2
+  #       displayName: 'Archive files'
+  #       inputs:
+  #         rootFolderOrFile: '$(System.DefaultWorkingDirectory)/dist/HelloAngular/'
+  #         includeRootFolder: false
+  #         archiveType: zip
+  #         archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+  #         replaceExistingArchive: true
+  #     - script: |
+  #         ls
 
-  - job: PublishArtifact
-    steps:
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-          ArtifactName: 'drop'
-          publishLocation: 'Container'
-      - script: |
-          ls
+  # - job: PublishArtifact
+  #   steps:
+  #     - task: PublishBuildArtifacts@1
+  #       inputs:
+  #         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+  #         ArtifactName: 'drop'
+  #         publishLocation: 'Container'
+  #     - script: |
+  #         ls
 
-- stage: BuildAndPushOnDocker
-  displayName: Build and Push image
-  jobs:  
-  - job: DockerImage
-    displayName: Build and push Docker image
-    steps:
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'gurjeet-dhub'
-        repository: 'iamguri/helloangular'
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-    - script: |
-        docker images
-        ls
+# - stage: BuildAndPushOnDocker
+#   displayName: Build and Push image
+#   jobs:  
+#   - job: DockerImage
+#     displayName: Build and push Docker image
+#     steps:
+#     - task: Docker@2
+#       inputs:
+#         containerRegistry: 'gurjeet-dhub'
+#         repository: 'iamguri/helloangular'
+#         command: 'buildAndPush'
+#         Dockerfile: '**/Dockerfile'
+#     - script: |
+#         docker images
+#         ls
 
 # - stage: PushingOnDockerHub
 #   displayName: Pushing on DockerHub
