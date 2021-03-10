@@ -49,9 +49,10 @@ stages:
     steps:
       - task: Docker@2
         inputs:
+          containerRegistry: 'gurjeet-dhub'
           command: 'build'
           Dockerfile: '**/Dockerfile'
-          tags: '$(Build.BuildId)'
+          tags: 'helloangular'
       - script: |
           docker images 
 
@@ -64,8 +65,8 @@ stages:
         inputs:
           containerRegistry: 'gurjeet-dhub'
           repository: 'iamguri/helloangular'
-          tags: '$(Build.BuildId)'
           command: 'push'
+          tags: 'helloangular'
 
 # steps:
 # - task: NodeTool@0
