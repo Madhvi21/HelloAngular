@@ -41,7 +41,7 @@ stages:
           ArtifactName: 'drop'
           publishLocation: 'Container'
 
-- stage: BuildDockerImage
+- stage: BuildingDockerImage
   displayName: Building Docker Image
   jobs:
   - job: DockerBuild
@@ -53,7 +53,7 @@ stages:
           command: 'build'
           Dockerfile: '**/Dockerfile'
 
-- stage: Pushing on DockerHub
+- stage: PushingOnDockerHub
   displayName: Pushing on DockerHub
   jobs:
   - job: PushingImage
