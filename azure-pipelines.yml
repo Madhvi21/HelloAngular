@@ -36,7 +36,6 @@ stages:
   displayName: ArchiveStage
   jobs:
   - job: BuildArtifact
-    dependsOn: NodeBuildJob
     steps:
       - task: ArchiveFiles@2
         displayName: 'Archive files'
