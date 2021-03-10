@@ -41,17 +41,28 @@ stages:
           ArtifactName: 'drop'
           publishLocation: 'Container'
 
-- stage: PushOnDocker
-  displayName: Pushing on Docker
+- stage: BuildDockerImage
+  displayName: Building Docker Image
   jobs:
-  - job: DockerPush
+  - job: DockerBuild
     steps:
       - task: Docker@2
         inputs:
           containerRegistry: 'gurjeet-dhub'
           repository: 'iamguri/angular-helloworld'
-          command: 'buildAndPush'
+          command: 'build'
           Dockerfile: '**/Dockerfile'
+
+- stage: Pushing on DockerHub
+  displayName: Pushing on DockerHub
+  jobs:
+  - job: PushingImage
+    steps:
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'gurjeet-dhub'
+          repository: 'iamguri/angular-helloworld'
+          command: 'push'
 
 # steps:
 # - task: NodeTool@0
