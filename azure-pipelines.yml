@@ -9,8 +9,8 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-stages:
-- stage: Build
+
+# - stage: Build
   displayName: Build stage
   jobs:
   - job: BuildJob
@@ -40,7 +40,7 @@ stages:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           ArtifactName: 'drop'
           publishLocation: 'Container'
-
+stages:
 - stage: BuildingDockerImage
   displayName: Building Docker Image
   jobs:
@@ -50,6 +50,7 @@ stages:
         inputs:
           command: 'build'
           Dockerfile: '**/Dockerfile'
+          tags: '$(Build.BuildId)'
 
 - stage: PushingOnDockerHub
   displayName: Pushing on DockerHub
@@ -60,6 +61,7 @@ stages:
         inputs:
           containerRegistry: 'gurjeet-dhub'
           repository: 'iamguri/helloangular'
+          tags: '$(Build.BuildId)'
           command: 'push'
 
 # steps:
