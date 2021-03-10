@@ -9,6 +9,9 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  ImageName: 'iamguri/helloangular:$(Build.BuildId)'  
+
 # stages:
 # - stage: Build
 #   displayName: Build stage
@@ -42,31 +45,37 @@ pool:
 #           publishLocation: 'Container'
 
 stages:
-- stage: BuildingDockerImage
-  displayName: Building Docker Image
-  jobs:
-  - job: DockerBuild
+
+- stage: Build
+  displayName: Build image
+  jobs:  
+  - job: DockerImage
+    displayName: Build and push Docker image
     steps:
-      - task: Docker@2
-        inputs:
-          containerRegistry: 'gurjeet-dhub'
-          command: 'build'
-          Dockerfile: '**/Dockerfile'
-          tags: 'helloangular'
-      - script: |
-          docker images 
+    - task: Docker@1
+      displayName: 'Build the Docker image'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'gurjeet-dhub'
+        command: 'Build an image'
+        dockerFile: '**/Dockerfile'
+        imageName: '$(ImageName)'
+        includeLatestTag: true
+        useDefaultContext: false
+        buildContext: '.'
 
 - stage: PushingOnDockerHub
   displayName: Pushing on DockerHub
   jobs:
   - job: PushingImage
     steps:
-      - task: Docker@2
-        inputs:
-          containerRegistry: 'gurjeet-dhub'
-          repository: 'iamguri/helloangular'
-          command: 'push'
-          tags: 'helloangular'
+    - task: Docker@1
+      displayName: 'Push the Docker image to Dockerhub'
+      inputs:
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'gurjeet-dhub'
+        command: 'Push an image'
+        imageName: '$(ImageName)'
 
 # steps:
 # - task: NodeTool@0
