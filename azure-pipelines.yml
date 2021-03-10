@@ -54,20 +54,21 @@ stages:
       - script: |
           ls
 
-# - stage: Build
-#   displayName: Build image
-#   jobs:  
-#   - job: DockerImage
-#     displayName: Build and push Docker image
-#     steps:
-#     - task: Docker@2
-#       inputs:
-#         containerRegistry: 'gurjeet-dhub'
-#         repository: 'iamguri/helloangular'
-#         command: 'buildAndPush'
-#         Dockerfile: '**/Dockerfile'
-#     - script: |
-#         docker images
+- stage: BuildAndPushOnDocker
+  displayName: Build and Push image
+  jobs:  
+  - job: DockerImage
+    displayName: Build and push Docker image
+    steps:
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'gurjeet-dhub'
+        repository: 'iamguri/helloangular'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+    - script: |
+        docker images
+        ls
 
 # - stage: PushingOnDockerHub
 #   displayName: Pushing on DockerHub
