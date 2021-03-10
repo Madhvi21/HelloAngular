@@ -52,6 +52,8 @@ stages:
           command: 'build'
           Dockerfile: '**/Dockerfile'
           tags: '$(Build.BuildId)'
+      - script: |
+          bash: 'docker images' 
 
 - stage: PushingOnDockerHub
   displayName: Pushing on DockerHub
