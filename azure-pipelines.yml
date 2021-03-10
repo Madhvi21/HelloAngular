@@ -48,8 +48,6 @@ stages:
     steps:
       - task: Docker@2
         inputs:
-          containerRegistry: 'gurjeet-dhub'
-          repository: 'iamguri/angular-helloworld'
           command: 'build'
           Dockerfile: '**/Dockerfile'
 
@@ -61,7 +59,7 @@ stages:
       - task: Docker@2
         inputs:
           containerRegistry: 'gurjeet-dhub'
-          repository: 'iamguri/angular-helloworld'
+          repository: 'iamguri/helloangular'
           command: 'push'
 
 # steps:
