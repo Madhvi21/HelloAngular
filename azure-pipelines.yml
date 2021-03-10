@@ -37,6 +37,45 @@ stages:
   jobs:
   - job: BuildArtifact
     steps:
+# Node.js with Angular
+# Build a Node.js project that uses Angular.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  # ImageName: 'iamguri/helloangular:$(Build.BuildId)'
+  ImageName: 'iamguri/helloangular:helloangular'  
+
+stages:
+- stage: BuildUsingNode
+  displayName: Build stage
+  jobs:
+  - job: NodeBuildJob
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '10.x'
+        displayName: 'Install Node.js'
+
+      - script: |
+          # cd '$(System.DefaultWorkingDirectory)/HelloAngular'
+          cd '$(System.DefaultWorkingDirectory)'
+          npm install -g @angular/cli
+          npm install
+          ng build --prod
+        displayName: 'npm install and build'
+
+- stage: ArchiveStage
+  displayName: ArchiveStage
+  jobs:
+  - job: BuildArtifact
+    steps:
       - task: ArchiveFiles@2
         displayName: 'Archive files'
         inputs:
@@ -45,6 +84,45 @@ stages:
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           replaceExistingArchive: true
+      - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        artifact: drop 
+
+- stage: ArtifactStage 
+  displayName: BuildingArtifact
+  jobs:
+  - job: PublishArtifact
+    steps:
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
+
+# - stage: BuildAndPushOnDocker
+#   displayName: Build and Push image
+#   jobs:  
+#   - job: DockerImage
+#     displayName: Build and push Docker image
+#     steps:
+#     - task: Docker@2
+#       inputs:
+#         containerRegistry: 'gurjeet-dhub'
+#         repository: 'iamguri/helloangular'
+#         command: 'buildAndPush'
+#         Dockerfile: '**/Dockerfile'
+
+# steps:
+# - task: NodeTool@0
+#   inputs:
+#     versionSpec: '10.x'
+#   displayName: 'Install Node.js'
+
+# - script: |
+#     npm install -g @angular/cli
+#     npm install
+#     ng build --prod
+#   displayName: 'npm install and build'
+
 
 - stage: ArtifactStage 
   displayName: BuildingArtifact
