@@ -1,5 +1,6 @@
 # stage 1
-FROM node:latest as node
+FROM node:12-alpine as node
+RUN mkdir -p /app
 WORKDIR /app
 COPY package.json /app 
 RUN npm install
