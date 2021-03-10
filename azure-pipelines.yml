@@ -50,7 +50,6 @@ stages:
   displayName: BuildingArtifact
   jobs:
   - job: PublishArtifact
-    dependsOn: ArchiveStage
     steps:
       - task: PublishBuildArtifacts@1
         inputs:
