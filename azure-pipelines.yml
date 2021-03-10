@@ -17,7 +17,7 @@ stages:
 - stage: BuildUsingNode
   displayName: Build stage
   jobs:
-  - job: BuildJob
+  - job: NodeBuildJob
     steps:
       - task: NodeTool@0
         inputs:
@@ -31,13 +31,12 @@ stages:
           npm install
           ng build --prod
         displayName: 'npm install and build'
-  
-  - job: listingContent
-    dependsOn: BuildJob
-    steps:
-      - script: |
-          ls dist/HelloAngular/
+
+- stage: ArchiveStage
+  displayName: ArchiveStage
+  jobs:
   - job: BuildArtifact
+    dependsOn: NodeBuildJob
     steps:
       - task: ArchiveFiles@2
         displayName: 'Archive files'
@@ -47,48 +46,31 @@ stages:
           archiveType: zip
           archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
           replaceExistingArchive: true
-      - script: |
-          ls
 
+- stage: ArtifactStage 
+  displayName: BuildingArtifact
+  jobs:
   - job: PublishArtifact
+    dependsOn: ArchiveStage
     steps:
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
           ArtifactName: 'drop'
           publishLocation: 'Container'
-      - script: |
-          ls
 
-- stage: BuildAndPushOnDocker
-  displayName: Build and Push image
-  jobs:  
-  - job: DockerImage
-    displayName: Build and push Docker image
-    steps:
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'gurjeet-dhub'
-        repository: 'iamguri/helloangular'
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-    - script: |
-        docker images
-        ls
-
-# - stage: PushingOnDockerHub
-#   displayName: Pushing on DockerHub
-#   jobs:
-#   - job: PushingImage
+# - stage: BuildAndPushOnDocker
+#   displayName: Build and Push image
+#   jobs:  
+#   - job: DockerImage
+#     displayName: Build and push Docker image
 #     steps:
-#     - task: Docker@1
-#       displayName: 'Push the Docker image to Dockerhub'
+#     - task: Docker@2
 #       inputs:
-#         containerregistrytype: 'Container Registry'
-#         dockerRegistryEndpoint: 'gurjeet-dhub'
-#         imageName: '$(ImageName)'
-#         command: 'Push an image'
-
+#         containerRegistry: 'gurjeet-dhub'
+#         repository: 'iamguri/helloangular'
+#         command: 'buildAndPush'
+#         Dockerfile: '**/Dockerfile'
 
 # steps:
 # - task: NodeTool@0
