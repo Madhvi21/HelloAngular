@@ -10,7 +10,9 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  ImageName: 'iamguri/helloangular:$(Build.BuildId)'  
+  # ImageName: 'iamguri/helloangular:$(Build.BuildId)'
+  ImageName: 'iamguri/helloangular:latest'  
+
 
 # stages:
 # - stage: Build
@@ -76,8 +78,9 @@ stages:
       inputs:
         containerregistrytype: 'Container Registry'
         dockerRegistryEndpoint: 'gurjeet-dhub'
-        command: 'Push an image'
         imageName: '$(ImageName)'
+        command: 'Push an image'
+        
 
 # steps:
 # - task: NodeTool@0
