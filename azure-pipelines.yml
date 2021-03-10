@@ -11,7 +11,7 @@ pool:
 
 variables:
   # ImageName: 'iamguri/helloangular:$(Build.BuildId)'
-  ImageName: 'iamguri/helloangular:latest'  
+  ImageName: 'iamguri/helloangular:helloangular'  
 
 
 # stages:
