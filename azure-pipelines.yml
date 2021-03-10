@@ -45,56 +45,11 @@ stages:
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
           replaceExistingArchive: true
+
       - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-        artifact: drop 
+        artifact: drop    
 
-- stage: ArtifactStage 
-  displayName: BuildingArtifact
-  jobs:
-  - job: PublishArtifact
-    steps:
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)'
-          ArtifactName: 'drop'
-          publishLocation: 'Container'
-
-# - stage: BuildAndPushOnDocker
-#   displayName: Build and Push image
-#   jobs:  
-#   - job: DockerImage
-#     displayName: Build and push Docker image
-#     steps:
-#     - task: Docker@2
-#       inputs:
-#         containerRegistry: 'gurjeet-dhub'
-#         repository: 'iamguri/helloangular'
-#         command: 'buildAndPush'
-#         Dockerfile: '**/Dockerfile'
-
-# steps:
-# - task: NodeTool@0
-#   inputs:
-#     versionSpec: '10.x'
-#   displayName: 'Install Node.js'
-
-# - script: |
-#     npm install -g @angular/cli
-#     npm install
-#     ng build --prod
-#   displayName: 'npm install and build'
-
-
-- stage: ArtifactStage 
-  displayName: BuildingArtifact
-  jobs:
-  - job: PublishArtifact
-    steps:
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-          ArtifactName: 'drop'
-          publishLocation: 'Container'
+- 
 
 # - stage: BuildAndPushOnDocker
 #   displayName: Build and Push image
